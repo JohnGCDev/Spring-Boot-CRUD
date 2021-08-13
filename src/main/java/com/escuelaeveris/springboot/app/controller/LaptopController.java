@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.escuelaeveris.springboot.app.domain.Laptop;
 import com.escuelaeveris.springboot.app.errors.RecursoException;
+import com.escuelaeveris.springboot.app.repository.ILaptopRepository;
 import com.escuelaeveris.springboot.app.service.ILaptopService;
 import com.escuelaeveris.springboot.app.util.CustomHttpResponse;
 
@@ -28,6 +30,9 @@ public class LaptopController {
 	
 	@Autowired
 	private ILaptopService laptopService;
+	
+	@Autowired
+	private ILaptopRepository laptopRepository;
 	
 	// --- CREAR ----
 	@PostMapping("/crear")
@@ -118,5 +123,16 @@ public class LaptopController {
 		}
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new CustomHttpResponse(HttpStatus.OK, "Lo sentimos. La laptop con id '" + id + "' no existe."));
+	}
+
+	// --- BUSCAR POR MARCA ---
+	@GetMapping("/buscar")
+	public ResponseEntity<Object> buscarLaptopPorMarca(@RequestParam String marca){
+		List<Laptop> laptops = laptopRepository.buscarPorMarca(marca);
+		if(laptops == null || laptops.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new CustomHttpResponse(HttpStatus.OK, "Lo sentimos. No se encontraron laptops con la marca '" + marca + "'."));
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(laptops);
 	}
 }

@@ -46,12 +46,4 @@ public class LaptopServiceImpl implements ILaptopService {
 	public boolean existeId(Long id) {
 		return repository.existsById(id);
 	}
-
-//	@Override
-//	public List<Laptop> buscarPorMarca(String marca) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-
 }
